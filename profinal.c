@@ -61,7 +61,6 @@ int main()
         case 1 :
                 void totalfaculty();
                 void fun();
-
                 break;
 
         case 2 :
