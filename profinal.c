@@ -1,83 +1,96 @@
 #include<stdio.h>
 #include<string.h>
+#include<windows.h>
 struct person_Struct
 {
     char person_name[50];
     int arrival_time,mini_querytime,completion_time,remaining,time_doop;
 }temp_Struct,temp_Struct2;
-int tft,tst;
+int i1,quantum_time,no_of_persons;
+int flag=0;
 void fun2();
 
 void fun()
 {
-    int count,quantum_time,no_of_persons,ttq;
+    int count,ttq;
+    float avgqt;
     int check[20];
     struct person_Struct faculty_P[50],faculty_Process2[50];
-    printf("\nEnter the no of candidates:");
-    scanf("%d",&no_of_persons);
+    printf("\nEntered the no of candidates:%d",no_of_persons);
     if(no_of_persons==0)
     {
         printf("\nNumber of persons are zero or invalid entry");
-        main();
+        main1();
     }
     void fun2(){
 
-for(int x=0;x<no_of_persons;x++){
-         for(count = 0; count < no_of_persons; count++) {
-                printf("\n");
-                //verify arrivals:
+for(int x=0;x<2*no_of_persons+2;x++){
+         for(count = 0; count < 2*no_of_persons+2; count++) {
+                //printf("\n");
 
-            b1:    if(faculty_P[count].remaining>0){
+                if(faculty_P[count].remaining>0){
                     faculty_P[count].remaining=faculty_P[count].remaining-quantum_time;
 
                     if(faculty_P[count].remaining<0)
                         goto a;
-                    printf("%s", faculty_P[count].person_name);
-                    printf("=%d\n",faculty_P[count].remaining);
+                    printf("\n->%s", faculty_P[count].person_name);
+                    printf("=%d",faculty_P[count].remaining);
                     faculty_P[count].time_doop+=quantum_time;
-                    if(faculty_P[count].time_doop<faculty_P[count+1].arrival_time)
-                        goto b1;
+                    if(faculty_P[count].time_doop>faculty_P[count+1].arrival_time)
+                        continue;
                     }
                     else if(faculty_P[count].remaining=0)
                     {
                        check[count]+=1;
                        //for total time on query
                        ttq+=faculty_P[count].time_doop;
-                       if(check[count]==1)
-                        printf("%s", faculty_P[count].person_name);
+                       if(check[count]==1){
+                        printf("\n->%s", faculty_P[count].person_name);printf("=%d",faculty_P[count].remaining);}
                         else
                             continue;
                     }
-                    else if(faculty_P[count].remaining<0)
+                    if(faculty_P[count].remaining<0)
                     {
                         //faculty_P[count].remaining=faculty_P[count].remaining-quantum_time;
                        a: faculty_P[count].remaining=0;
                         check[count]+=1;
                         if(check[count]==1){
-                        printf(">%s", faculty_P[count].person_name);printf("=%d\n",faculty_P[count].remaining);}
+                        printf("\n->%s", faculty_P[count].person_name);printf("=%d\n",faculty_P[count].remaining);}
                     }
 }
         }
     }
-    for(count = 0; count < no_of_persons; count++) {
-        printf("Enter the details\n of Person [%d]", count+1);
-        puts("");
-        printf("Your Name : ");
+
+    c1:for(count = 0; count < no_of_persons; count++) {
+        printf("\nEnter the details of Person [%d]", count+1);
+        printf("\n");
+        printf("Name : ");
         scanf("%s", faculty_P[count].person_name);
-        t1:printf("Arrival Time : ");
+        t1:printf("\nArrival Time : ");
         scanf("%d", &faculty_P[count].arrival_time);
+        //printf("%d",faculty_P[count].arrival_time);
         if(faculty_P[count].arrival_time<0||faculty_P[count].arrival_time>60)
         {
-            printf("\nArrival time should lie between 0 and 120 ,\nenter again");goto t1;
+            printf("\nArrival time should lie between 0 and 60 ,enter again\n");goto t1;
         }
-        printf("Mini req Time : ");
+        t2:printf("\nMini req Time : ");
+        fflush(stdin);
         scanf("%d", &faculty_P[count].mini_querytime);
-        quantum_time=60/no_of_persons;
-        if(faculty_P[count].mini_querytime<0||faculty_P[count].mini_querytime>quantum_time)
+        if(flag==1){
+        if(faculty_P[count].mini_querytime<0&&faculty_P[count].mini_querytime>quantum_time)
         {
-            printf("\nArrival time should lie between 0 and %d ,\nenter again if doubt not cleared visit tommorrow",quantum_time);goto t1;
+            printf("\nMini req time should lie between 0 and 60 ,\n enter again if doubt not cleared visit tommorrow",quantum_time);goto t2;
+        }}
+        else
+        if(faculty_P[count].mini_querytime<0&&faculty_P[count].mini_querytime>60){goto c3;}
+        c3:puts("");
+        for(int i=0;i<11;i++)
+        {   if(i%2==0)
+                printf("-------");
+                else
+                    printf("---");
+                Sleep(150);
         }
-        puts("");
         }
 
         //sorting the persons
@@ -93,8 +106,8 @@ for(int x=0;x<no_of_persons;x++){
     }
     //quantum_time=60/no_of_persons;
 
-    printf("mini. time for each candidate will be %d since time is to be shared equally among peers of %d people",quantum_time,no_of_persons);
-    printf("\nSORTED ORDER");
+    printf("\nmini. time for each candidate will be %d since time is to be shared equally among peers of %d people",quantum_time,no_of_persons);
+    printf("\nSORTED ORDER:");
     for(count=0;count<no_of_persons;count++)
         printf("%s", faculty_P[count].person_name);
 
@@ -108,47 +121,65 @@ for(int x=0;x<no_of_persons;x++){
         {
             ttq+=faculty_P[count].mini_querytime;
         }
-            printf("the total time spent on queries =%d",ttq);
-
+            printf("\ntotal time spent on queries =%d",ttq);
+            avgqt=(ttq*1.0)/(no_of_persons*1.0);
+printf("\naverage query time =%.2f\n",avgqt);
 }
 
-int main()
+
+void main1()
 {
     int choice,total_faculty,total_student,total,c;
+    char d;
 
+
+    printf("\t\t\t\t\tFair handling of queues");
+    printf("\n--------------------------------------------------------------------------------------------------------------");
+printf("\nNote:Teachers queries will be handled in an hour and Students queries will be handled in a Hour");
+printf("\n--------------------------------------------------------------------------------------------------------------");
+c2:printf("\nDO you want to enter any fixed amount of time?(y or n)");
+scanf("%c",&d);
+printf("%c",d);
+if(d=='y'||d=='Y'){printf("enter the time quantum:");scanf("%d",&quantum_time);printf("enter the no of persons for either faculty completely or students completely:");scanf("\n%d",&no_of_persons);}
+
+    else if(d=='N'||d=='n'){printf("enter the no of persons for either faculty completely or students completely:");scanf("\n%d",&no_of_persons);quantum_time=(60/no_of_persons);flag=1;}
+
+    printf("Queue Completed");
     c1:printf("\nPlease choose a respective no ");
-printf("\n1. FACULTY queue.");
+    printf("\n1. FACULTY queue.");
     printf("\n2. STUDENT queue.");
     printf("\n3. Exit\n");
-    fflush(stdin);
     scanf("%d", &c);
     if(c!=1&&c!=2&&c!=3){
             printf("\nthis is invalid key\nkindly press again");goto c1;}
     choice=c;
-   do{
+
     switch(choice)
     {
         case 1 :
-                //void totalfaculty();
+
                 printf("Faculty Entries");
                 fun();
                 break;
 
         case 2 :
-                //void totalstudent();
                 printf("Students Entries");
                 fun();
                 break;
 
+
         case 3 :
 
                 exit(0);
-                break;
+
         default :
                 printf("\nPlease select the correct option by running the program again.");
                 goto c1;
 
 
     }
-   }while(c==1||c==2||c==3);
+
+   return 0;
     }
+    void main(){main1();fflush(stdin);fflush(stdout);main1();}
+
